@@ -110,7 +110,7 @@ namespace HoboToughLifeMods
 
                 var font = Resources.GetBuiltinResource<Font>("Arial.ttf");
                 text.font = font;
-                text.fontSize = 30;
+                text.fontSize = 20;
                 text.color = Color.blue;
             }
 
