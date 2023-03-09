@@ -9,6 +9,7 @@ using Core.Net;
 using Game.ArcadeMachine;
 using Core;
 using UnhollowerRuntimeLib;
+using TMPro;
 
 namespace HoboToughLifeMods
 {
@@ -105,13 +106,15 @@ namespace HoboToughLifeMods
                 var trans = textObject.transform;
                 trans.SetParent(parent.transform, false);
 
-                var text = textObject.AddComponent<Text>();
+                var text = textObject.AddComponent<TextMeshProUGUI>();
                 text.text = MyNetworkPlayer.name;
-
-                var font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-                text.font = font;
+                
+                text.m_width = 100;
+                text.alignment = TextAlignmentOptions.Top;
                 text.fontSize = 20;
-                text.color = Color.blue;
+                text.fontStyle = FontStyles.Bold;
+                text.color = Color.black;
+                text.enableWordWrapping = false;
             }
 
             /// <summary>

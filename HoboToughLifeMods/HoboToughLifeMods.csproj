@@ -59,6 +59,10 @@
       <HintPath>..\GameLibs\MelonLoader\Managed\UnhollowerBaseLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\GameLibs\MelonLoader\Managed\Unity.TextMeshPro.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\GameLibs\MelonLoader\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
