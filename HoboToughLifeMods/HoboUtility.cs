@@ -1,12 +1,14 @@
 ﻿using MelonLoader;
 using HarmonyLib;
 using UnityEngine;
-using Game;
+using UnityEngine.UI;
 using UI;
+using Game;
 using System;
 using Core.Net;
 using Game.ArcadeMachine;
 using Core;
+using UnhollowerRuntimeLib;
 
 namespace HoboToughLifeMods
 {
@@ -56,8 +58,9 @@ namespace HoboToughLifeMods
                 if (hasCreated) { return; }
 
                 var mapPlayer = GameObject.Find("GUI/GUICanvas/CanvasScaler/GUIMap/transl/MapPlayer");
-                var dammyMapPlayer  = CloneObject(mapPlayer, "DammyMapPlayer");
-                if(dammyMapPlayer == null)
+                var dammyMapPlayer = CloneObject(mapPlayer, "DammyMapPlayer");
+                AddNameObject(dammyMapPlayer);
+                if (dammyMapPlayer == null)
                 {
                     Debug.Log("クローンに失敗");
                     return;
@@ -88,6 +91,27 @@ namespace HoboToughLifeMods
                 copyTrans.localScale = originTrans.localScale;
 
                 return copy;
+            }
+
+            /// <summary>
+            /// 名前をテキスト表示
+            /// </summary>
+            /// <remarks>ImageコンポーネントとTextコンポーネントは共存できないのでサブオブジェクトを追加してTextを表示する</remarks>
+            /// <param name="object"></param>
+            static void AddNameObject(GameObject parent)
+            {
+                var textObject = new GameObject();
+                textObject.name = "UserName";
+                var trans = textObject.transform;
+                trans.SetParent(parent.transform, false);
+
+                var text = textObject.AddComponent<Text>();
+                text.text = MyNetworkPlayer.name;
+
+                var font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                text.font = font;
+                text.fontSize = 30;
+                text.color = Color.blue;
             }
 
             /// <summary>
