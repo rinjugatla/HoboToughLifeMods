@@ -12,6 +12,7 @@ namespace HoboToughLifeMods.Model
 {
     internal class MapPlayerModel : IDisposable
     {
+        public GameObject PlayerObject { get; private set; }
         /// <summary>
         /// プレイヤー情報
         /// </summary>
@@ -27,19 +28,19 @@ namespace HoboToughLifeMods.Model
         /// <summary>
         /// プレイヤーがゲーム内に存在するか
         /// </summary>
-        public bool Exists => NetworkPlayer != null;
+        public bool Exists => PlayerObject != null;
         /// <summary>
         /// プレイヤー名
         /// </summary>
-        public string Name => NetworkPlayer ? NetworkPlayer.name : "";
+        public string Name => Exists ? PlayerObject.name : "";
 
         /// <summary>
         /// 初期化(アイコン表示に必要な情報を作成)
         /// </summary>
-        /// <param name="networkPlayer">プレイヤー情報(UniversalNetworkPlayerを含む)</param>
-        public MapPlayerModel(UniversalNetworkPlayer networkPlayer)
+        /// <param name="playerObject">プレイヤー情報</param>
+        public MapPlayerModel(GameObject playerObject)
         {
-            NetworkPlayer = networkPlayer;
+            PlayerObject = playerObject;
 
             CreateDammyMapPlayerObject();
         }
@@ -50,6 +51,7 @@ namespace HoboToughLifeMods.Model
         private void CreateDammyMapPlayerObject()
         {
             if (!Exists) { return; }
+            
             bool hasCreated = MapPlayerObject != null;
             if (hasCreated) { return; }
 
@@ -64,10 +66,7 @@ namespace HoboToughLifeMods.Model
 
             AddNameObject(copiedMapObject);
 
-            var playerPoint = copiedMapObject.GetComponent<GUIMapPlayerPoint>();
-            playerPoint.myPlayer = NetworkPlayer;
             MapPlayerObject = copiedMapObject;
-            MapPlayerPoint = playerPoint;
         }
 
         /// <summary>
@@ -84,8 +83,8 @@ namespace HoboToughLifeMods.Model
             var copyTrans = copy.transform;
 
             copy.name = copyName;
-            copyTrans.SetParent(originTrans.parent);
-            copyTrans.localPosition = originTrans.localPosition;
+            copyTrans.SetParent(originTrans.parent, false);
+            copyTrans.localPosition = Vector3.zero;
             copyTrans.localScale = originTrans.localScale;
 
             return copy;
@@ -122,7 +121,36 @@ namespace HoboToughLifeMods.Model
         {
             if (!Exists) { return; }
 
-            MapPlayerPoint.OnShow();
+            var gameTrans = PlayerObject.transform;
+            var mapTrans = MapPlayerObject.transform;
+            mapTrans.position = ConvertGameToMapPostion(gameTrans.position);
+            mapTrans.eulerAngles = ConvertGameToMapAngle(gameTrans.eulerAngles);
+        }
+
+        /// <summary>
+        /// ゲーム位置からマップ位置に変換
+        /// </summary>
+        /// <param name="current">ゲーム上の位置</param>
+        private Vector3 ConvertGameToMapPostion(Vector3 current)
+        {
+            // GameObjectのPositionから最小二乗法で近似式算出
+            // 入力のx, y, zと出力のx, y, zが異なるので注意
+            double x = 0.00000630598925 * (current.z * current.z) + -0.976941344 * current.z + 874.85253;
+            double y = -0.000000102722494 * (current.x * current.x) + 0.955787392 * current.x + 1041.58575;
+            double z = -69.75;
+            Vector3 result = new Vector3((float)x, (float)y, (float)z);
+            return result;
+        }
+
+        /// <summary>
+        /// ゲーム角度からマップ角度に変換
+        /// </summary>
+        /// <param name="angle">ゲーム上の角度</param>
+        private Vector3 ConvertGameToMapAngle(Vector3 angle)
+        {
+            double converted = (540.0 - angle.y) % 360.0;
+            Vector3 result = new Vector3(0, 0, (float)converted);
+            return result;
         }
 
         /// <summary>

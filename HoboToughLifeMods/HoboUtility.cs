@@ -1,16 +1,8 @@
 ﻿using MelonLoader;
 using HarmonyLib;
 using UnityEngine;
-using UnityEngine.UI;
 using UI;
-using Game;
 using System;
-using Core.Net;
-using Game.ArcadeMachine;
-using Core;
-using UnhollowerRuntimeLib;
-using TMPro;
-using System.Collections.Generic;
 using HoboToughLifeMods.Controller;
 
 namespace HoboToughLifeMods
@@ -26,21 +18,35 @@ namespace HoboToughLifeMods
         static class GUIMapManager_Hook
         {
             private static MapPlayerController MapPlayerController = new MapPlayerController();
+            private static GameObject SelfPlayerObject = null;
+            private static GameObject RootObject = null;
 
             static void Postfix(GUIMapManager __instance, bool hasMap)
             {
-                AddPlayers();
+                AddSelfPlayer();
+                AddMultiplayerObjects();
+
                 UpdateMapPlayer();
             }
 
-            private static void AddPlayers()
+            /// <summary>
+            /// 自キャラのゲームオブジェクトを取得
+            /// </summary>
+            private static void AddSelfPlayer()
             {
-                // すべてのオブジェクトから探索するのは無駄なので追加や削除があったときのみ行うよう変更したほうがいい
-                var networkPlayers = GameObject.FindObjectsOfType<UniversalNetworkPlayer>();
-                if (networkPlayers == null) { return; }
+                if(SelfPlayerObject != null) { return; }
 
-                foreach (var player in networkPlayers) { MapPlayerController.AddPlayer(player); }
-                
+                SelfPlayerObject = GameObject.FindObjectOfType<Game.PlayerManager>().gameObject;
+                MapPlayerController.AddPlayer(SelfPlayerObject);
+            }
+
+            /// <summary>
+            /// マルチプレイヤーのゲームオブジェクトを取得
+            /// </summary>
+            private static void AddMultiplayerObjects()
+            {
+                var players = GameObject.FindObjectsOfType<Game.PlayerClientManager>();
+                foreach (var player in players) { MapPlayerController.AddPlayer(player.transform.gameObject); }
             }
 
             /// <summary>

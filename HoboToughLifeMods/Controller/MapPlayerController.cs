@@ -1,12 +1,7 @@
-﻿using Core.Net;
-using HoboToughLifeMods.Model;
+﻿using HoboToughLifeMods.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TMPro;
-using UI;
 using UnityEngine;
 
 namespace HoboToughLifeMods.Controller
@@ -18,18 +13,17 @@ namespace HoboToughLifeMods.Controller
         /// <summary>
         /// アイコンを追加
         /// </summary>
-        /// <param name="networkPlayer">プレイヤー情報(UniversalNetworkPlayerを含む)</param>
-        /// <param name="isSelfPlayer">自キャラか</param>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <param name="playerObject">プレイヤー情報</param>
         /// <returns>追加したか</returns>
-        public bool AddPlayer(UniversalNetworkPlayer networkPlayer)
+        public bool AddPlayer(GameObject playerObject)
         {
-            if (networkPlayer == null) { throw new ArgumentNullException(); }
+            if (playerObject == null) { throw new ArgumentNullException(); }
 
-            bool hasPlayerObject = MapPlayers.Select(p => p.Name).Contains(networkPlayer.name);
+            Debug.Log(playerObject.name);
+            bool hasPlayerObject = MapPlayers.Select(p => p.Name).Contains(playerObject.name);
             if (hasPlayerObject) { return false; }
 
-            var model = new MapPlayerModel(networkPlayer);
+            var model = new MapPlayerModel(playerObject);
             if(model != null) { MapPlayers.Add(model); }
 
             return true;
