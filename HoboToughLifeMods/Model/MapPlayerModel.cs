@@ -135,10 +135,10 @@ namespace HoboToughLifeMods.Model
         {
             // GameObjectのPositionから最小二乗法で近似式算出
             // 入力のx, y, zと出力のx, y, zが異なるので注意
-            double x = 0.00000630598925 * (current.z * current.z) + -0.976941344 * current.z + 874.85253;
-            double y = -0.000000102722494 * (current.x * current.x) + 0.955787392 * current.x + 1041.58575;
-            double z = -69.75;
-            Vector3 result = new Vector3((float)x, (float)y, (float)z);
+            float x = 0.00000630598925f * (current.z * current.z) + -0.976941344f * current.z + 874.85253f;
+            float y = -0.000000102722494f * (current.x * current.x) + 0.955787392f * current.x + 1041.58575f;
+            float z = -69.75f;
+            Vector3 result = new Vector3(x, y, z);
             return result;
         }
 
@@ -148,8 +148,8 @@ namespace HoboToughLifeMods.Model
         /// <param name="angle">ゲーム上の角度</param>
         private Vector3 ConvertGameToMapAngle(Vector3 angle)
         {
-            double converted = (540.0 - angle.y) % 360.0;
-            Vector3 result = new Vector3(0, 0, (float)converted);
+            float converted = (540f - angle.y) % 360f;
+            Vector3 result = new Vector3(0, 0, converted);
             return result;
         }
 
