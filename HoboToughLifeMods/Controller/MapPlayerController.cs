@@ -19,7 +19,6 @@ namespace HoboToughLifeMods.Controller
         {
             if (playerObject == null) { throw new ArgumentNullException(); }
 
-            Debug.Log(playerObject.name);
             bool hasPlayerObject = MapPlayers.Select(p => p.Name).Contains(playerObject.name);
             if (hasPlayerObject) { return false; }
 
