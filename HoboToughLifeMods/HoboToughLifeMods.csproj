@@ -91,7 +91,7 @@
   <ItemGroup>
     <Compile Include="Controller\MapPlayerController.cs" />
     <Compile Include="HoboUtility.cs" />
-    <Compile Include="Model\MapPlayerModel.cs" />
+    <Compile Include="Behaviour\MapPlayerBehaviour.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
